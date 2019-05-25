@@ -96,6 +96,11 @@ class Post(Resource):
         query.execute()
         return (models.Post.get(models.Post.id==id), 200)
 
+    def delete(self, id):
+        query = models.Post.delete().where(models.Post.id==id)
+        query.execute()
+        return 'Post has been deleted'
+
 
 
 posts_api = Blueprint('resources.posts', __name__)
