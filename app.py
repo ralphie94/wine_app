@@ -1,10 +1,11 @@
 from flask import Flask, g
 import models
 from resources.users import users_api
+from resources.posts import posts_api
 
 from flask_cors import CORS
 from flask_login import LoginManager
-login_manager - LoginManager()
+login_manager = LoginManager()
 
 import config
 
@@ -20,7 +21,9 @@ def load_user(userid):
         return None
 
 CORS(users_api, origins=["http://localhost:3000"], supports_credentials=True)
+CORS(posts_api, origins=["http://localhost:3000"], supports_credentials=True)
 app.register_blueprint(users_api, url_prefix='/users')
+app.register_blueprint(posts_api, url_prefix='/wines')
 
 @app.before_request
 def before_request():
@@ -38,4 +41,4 @@ def hello():
 
 if __name__ == '__main__':
     models.initialize()
-    app.run(debug=DEBUG, port=PORT)
+    app.run(debug=config.DEBUG, port=config.PORT)
