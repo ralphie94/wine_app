@@ -9,6 +9,7 @@ DATABASE = SqliteDatabase('wine.sqlite')
 class User(UserMixin, Model):
     username = CharField(unique=True)
     password = CharField(max_length=100)
+    # cellar = []
 
     class Meta:
         database = DATABASE
@@ -28,10 +29,21 @@ class User(UserMixin, Model):
         else:
             raise Exception("User with that username already exists")
 
+class Post(Model):
+    posted_by = CharField()
+    name = CharField()
+    vintage = CharField(max_length=4)
+    review = CharField()
+    # created_by = ForeignKeyField(User, related_name='post_set')
+    
+    class Meta:
+        database = DATABASE
+
+
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User], safe=True)
+    DATABASE.create_tables([User, Post], safe=True)
     DATABASE.close()
 
 
