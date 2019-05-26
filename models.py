@@ -16,10 +16,10 @@ class User(UserMixin, Model):
 
     @classmethod
     def create_user(cls, username, password, **kwargs):
-        email = email.lower()
+        username = username.lower()
         try:
             cls.select().where(
-                (cls.email==email)
+                (cls.username==username)
             ).get()
         except cls.DoesNotExist:
             user = cls(username=username)
