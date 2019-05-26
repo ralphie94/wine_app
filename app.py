@@ -4,7 +4,7 @@ from resources.users import users_api
 
 from flask_cors import CORS
 from flask_login import LoginManager
-login_manager - LoginManager()
+login_manager = LoginManager()
 
 import config
 
@@ -38,4 +38,4 @@ def hello():
 
 if __name__ == '__main__':
     models.initialize()
-    app.run(debug=DEBUG, port=PORT)
+    app.run(debug=config.DEBUG, port=config.PORT)
