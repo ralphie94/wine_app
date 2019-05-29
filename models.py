@@ -1,5 +1,6 @@
 import datetime
-
+from flask import jsonify, make_response
+import json
 from peewee import *
 from flask_login import UserMixin
 from flask_bcrypt import generate_password_hash
@@ -18,7 +19,7 @@ class User(UserMixin, Model):
     def create_user(cls, username, password, **kwargs):
         username = username.lower()
         try:
-            cls.select().where(
+           cls.select().where(
                 (cls.username==username)
             ).get()
         except cls.DoesNotExist:
@@ -27,7 +28,8 @@ class User(UserMixin, Model):
             user.save()
             return user
         else:
-            raise Exception("User with that username already exists")
+            raise Exception("Username already exists")
+             
 
 class Post(Model):
     posted_by = CharField()
