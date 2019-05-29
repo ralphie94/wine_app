@@ -1,13 +1,15 @@
-from flask import jsonify, Blueprint, abort
+import json
+from flask import jsonify, Blueprint, abort, make_response
 from flask_restful import (Resource, Api, reqparse, fields, marshal, marshal_with, url_for)
 import models
 
 post_fields = {
     'id': fields.Integer,
+    'img': fields.String,
     'posted_by': fields.String,
-    'name': fields.String,
+    'wine': fields.String,
     'vintage': fields.Integer,
-    'review': fields.String,
+    'comment': fields.String,
 }
 
 class PostList(Resource):
@@ -20,7 +22,13 @@ class PostList(Resource):
             location=['form', 'json']
         )
         self.reqparse.add_argument(
-            'name',
+            'img',
+            required=False,
+            help="No image provided",
+            location=['form', 'json']
+        )
+        self.reqparse.add_argument(
+            'wine',
             required=False,
             help='Name of wine is required',
             location=['form', 'json']
@@ -32,7 +40,7 @@ class PostList(Resource):
             location=['form', 'json']
         )
         self.reqparse.add_argument(
-            'review',
+            'comment',
             required=False,
             help='No review/comment',
             location=['form', 'json']
@@ -43,12 +51,15 @@ class PostList(Resource):
         posts = [marshal(post, post_fields) for post in models.Post.select()]
         return posts
 
-    @marshal_with(post_fields)
     def post(self):
         args = self.reqparse.parse_args()
         print(args, "<---- args (req.body)")
         post = models.Post.create(**args)
-        return post
+        return make_response(
+            json.dumps({
+                'post': marshal(post, post_fields),
+                'message': 'successfully posted'
+            }), 200)
 
 
 class Post(Resource):
