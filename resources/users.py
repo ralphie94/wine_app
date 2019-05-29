@@ -11,7 +11,8 @@ from flask_bcrypt import check_password_hash
 import models
 
 user_fields = {
-    'username': fields.String
+    'username': fields.String,
+    'id': fields.Integer
 }
 
 class UserList(Resource):
@@ -89,8 +90,30 @@ class User(Resource):
                     json.dumps({
                         'message':"Username does not exist"
                     }), 400)
-        
 
+class SingleUser(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+            'username',
+            required=True,
+            help='No username provided',
+            location=['form', 'json']
+        )
+        self.reqparse.add_argument(
+            'password',
+            required=True,
+            help='No password provided',
+            location=['form', 'json']
+        )
+        super().__init__()
+        
+    @marshal_with(user_fields)
+    def put(self, id):
+      args = self.reqparse.parse_args()
+      query = models.User.update(**args).where(models.User.id==id)
+      query.execute()
+      return(models.User.get(models.User.id==id), 200)
 
 
 
@@ -104,4 +127,9 @@ api.add_resource(
 api.add_resource(
     User,
     '/login'
+)
+
+api.add_resource(
+    SingleUser,
+    '/<int:id>'
 )
