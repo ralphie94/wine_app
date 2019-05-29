@@ -76,7 +76,7 @@ class User(Resource):
                     return make_response(
                         json.dumps({
                             'user': marshal(user, user_fields),
-                            'message':"success"
+                            'message':"success",
                         }), 200)
                 else:
                     return make_response(
