@@ -72,22 +72,23 @@ class User(Resource):
             args = self.reqparse.parse_args()
             user = models.User.get(models.User.username==args['username'])
             if(user):
+                print(user, "this is user")
                 if(check_password_hash(user.password, args['password'])):
                     return make_response(
                         json.dumps({
                             'user': marshal(user, user_fields),
-                            'message':"success",
+                            'message': 'success'
                         }), 200)
                 else:
                     return make_response(
                         json.dumps({
                             'message':"incorrect password"
-                        }), 200)
+                        }), 401)
         except models.User.DoesNotExist:
             return make_response(
                     json.dumps({
                         'message':"Username does not exist"
-                    }), 200)
+                    }), 400)
         
 
 
