@@ -33,9 +33,10 @@ class User(UserMixin, Model):
 
 class Post(Model):
     posted_by = CharField()
-    name = CharField()
+    img = CharField()
+    wine = CharField()
     vintage = CharField(max_length=4)
-    review = CharField()
+    comment = CharField()
     # created_by = ForeignKeyField(User, related_name='post_set')
     
     class Meta:
