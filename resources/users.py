@@ -10,8 +10,10 @@ from flask_bcrypt import check_password_hash, generate_password_hash
 
 import models
 
+
 user_fields = {
     'username': fields.String,
+    'password': fields.String,
     'id': fields.Integer
 }
 
@@ -112,18 +114,30 @@ class SingleUser(Resource):
             location=['form', 'json']
         )
         super().__init__()
-        
+
+    @marshal_with(user_fields)
+    def get(self, id):
+        try:
+           user = models.User.get(models.User.id==id)
+        except models.User.DoesNotExist:
+           abort(404)
+        else:
+           return (user, 200)
+
     @marshal_with(user_fields)
     def put(self, id):
         args = self.reqparse.parse_args()
-        if(args['password']==False):
-            args.remove(args['password'])
+        print(args)
+        if(args['password']==''):
+            self.reqparse.remove_argument('password')
+            args = self.reqparse.parse_args()
+            print(args)
         else:
             args['password'] = generate_password_hash(args['password'])
-            
         query = models.User.update(**args).where(models.User.id==id)
         query.execute()
         return(models.User.get(models.User.id==id), 200)
+            
 
     def delete(self, id):
         query = models.User.delete().where(models.User.id == id)
