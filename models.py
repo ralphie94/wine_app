@@ -33,10 +33,12 @@ class User(UserMixin, Model):
 
 class Post(Model):
     posted_by = CharField()
+    user = CharField()
     img = CharField()
     wine = CharField()
     vintage = CharField(max_length=4)
     comment = CharField()
+    created_at = DateTimeField(default=datetime.datetime.now)
     # created_by = ForeignKeyField(User, related_name='post_set')
     
     class Meta:
