@@ -41,14 +41,14 @@ def after_request(response):
 def hello():
     return 'hi'
 
-@app.route('/wines)
-def wines():
-    r = requests.get('https://api.globalwinescore.com/globalwinescores/latest/?wine_id=')
-    r.headers{
-        'content-type': 'application/json',
-        'Authorization':'Token 911c4473076f96f384b74008df0dff9596bc829c'
-    }
-    return r.json()
+# @app.route('/wines')
+# def wines():
+#     r = requests.get('https://api.globalwinescore.com/globalwinescores/latest/?wine_id=')
+#     r.headers{
+#         'content-type': 'application/json',
+#         'Authorization':'Token 911c4473076f96f384b74008df0dff9596bc829c'
+#     }
+#     return r.json()
 
 if __name__ == '__main__':
     models.initialize()
