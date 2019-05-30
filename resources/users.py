@@ -100,13 +100,13 @@ class SingleUser(Resource):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
             'username',
-            required=True,
+            required=False,
             help='No username provided',
             location=['form', 'json']
         )
         self.reqparse.add_argument(
             'password',
-            required=True,
+            required=False,
             help='No password provided',
             location=['form', 'json']
         )
@@ -115,6 +115,7 @@ class SingleUser(Resource):
     @marshal_with(user_fields)
     def put(self, id):
       args = self.reqparse.parse_args()
+      print(args, 'this is args')
       query = models.User.update(**args).where(models.User.id==id)
       query.execute()
       return(models.User.get(models.User.id==id), 200)
