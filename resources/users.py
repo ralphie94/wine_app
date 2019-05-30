@@ -47,7 +47,8 @@ class UserList(Resource):
             create_user = marshal(user, user_fields)
             return make_response(
                 json.dumps({
-                    "user": create_user 
+                    "user": create_user,
+                    "register": True 
                 }), 201)
         return make_response(
             json.dumps({
@@ -123,6 +124,14 @@ class SingleUser(Resource):
         query = models.User.update(**args).where(models.User.id==id)
         query.execute()
         return(models.User.get(models.User.id==id), 200)
+
+    def delete(self, id):
+        query = models.User.delete().where(models.User.id == id)
+        query.execute()
+        return make_response(
+            json.dumps({
+                "deleted": True
+            }), 200)
 
 
 
