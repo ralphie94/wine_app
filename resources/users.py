@@ -100,13 +100,13 @@ class SingleUser(Resource):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
             'username',
-            required=True,
+            required=False,
             help='No username provided',
             location=['form', 'json']
         )
         self.reqparse.add_argument(
             'password',
-            required=True,
+            required=False,
             help='No password provided',
             location=['form', 'json']
         )
