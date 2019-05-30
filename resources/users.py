@@ -6,7 +6,7 @@ from flask_restful import (Resource, Api, reqparse, inputs, fields, marshal, mar
 
 from flask_login import login_user, logout_user, login_required, current_user
 
-from flask_bcrypt import check_password_hash
+from flask_bcrypt import check_password_hash, generate_password_hash
 
 import models
 
@@ -114,11 +114,15 @@ class SingleUser(Resource):
         
     @marshal_with(user_fields)
     def put(self, id):
-      args = self.reqparse.parse_args()
-      print(args, 'this is args')
-      query = models.User.update(**args).where(models.User.id==id)
-      query.execute()
-      return(models.User.get(models.User.id==id), 200)
+        args = self.reqparse.parse_args()
+        if(args['password']==False):
+            args.remove(args['password'])
+        else:
+            args['password'] = generate_password_hash(args['password'])
+            
+        query = models.User.update(**args).where(models.User.id==id)
+        query.execute()
+        return(models.User.get(models.User.id==id), 200)
 
 
 

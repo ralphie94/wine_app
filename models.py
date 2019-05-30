@@ -41,8 +41,7 @@ class Post(Model):
     
     class Meta:
         database = DATABASE
-
-
+ 
 
 def initialize():
     DATABASE.connect()
