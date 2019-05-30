@@ -3,7 +3,7 @@ import models
 from resources.users import users_api
 from resources.posts import posts_api
 
-import requests
+# import requests
 
 from flask_cors import CORS
 from flask_login import LoginManager
