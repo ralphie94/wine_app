@@ -13,7 +13,6 @@ import models
 
 user_fields = {
     'username': fields.String,
-    'password': fields.String,
     'id': fields.Integer
 }
 
@@ -141,6 +140,8 @@ class SingleUser(Resource):
 
     def delete(self, id):
         query = models.User.delete().where(models.User.id == id)
+        query.execute()
+        query = models.Post.delete().where(models.Post.posted_by == id)
         query.execute()
         return make_response(
             json.dumps({
