@@ -79,12 +79,6 @@ class Post(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
-            'posted_by',
-            required=False,
-            help='username is required to post',
-            location=['form', 'json']
-        )
-        self.reqparse.add_argument(
             'wine',
             required=False,
             help='Name of wine is required',
@@ -97,7 +91,7 @@ class Post(Resource):
             location=['form', 'json']
         )
         self.reqparse.add_argument(
-            'review',
+            'comment',
             required=False,
             help='No review/comment',
             location=['form', 'json']
