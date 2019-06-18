@@ -1,3 +1,4 @@
+import os
 from flask import Flask, g
 import models
 from resources.users import users_api
@@ -22,8 +23,8 @@ def load_user(userid):
     except models.DoesNotExist:
         return None
 
-CORS(users_api, origins=["http://localhost:3000"], supports_credentials=True)
-CORS(posts_api, origins=["http://localhost:3000"], supports_credentials=True)
+CORS(users_api, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True)
+CORS(posts_api, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True)
 # CORS(wine_api, origins=["https://api.globalwinescore.com/globalwinescores/latest"], supports_credentials=True)
 
 app.register_blueprint(users_api, url_prefix='/users')
@@ -43,6 +44,10 @@ def after_request(response):
 @app.route('/')
 def hello():
     return 'hi'
+
+if 'ON_HEROKU' in os.environ:
+    print('hittlin ')
+    models.initialize()
 
 
 if __name__ == '__main__':

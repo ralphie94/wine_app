@@ -1,3 +1,6 @@
+import os
+from playhouse.db_url import connect
+
 import datetime
 from flask import jsonify, make_response
 import json
@@ -5,7 +8,7 @@ from peewee import *
 from flask_login import UserMixin
 from flask_bcrypt import generate_password_hash
 
-DATABASE = SqliteDatabase('wine.sqlite')
+DATABASE = connect(os.environ.get('DATABASE_URL'))
 
 class User(UserMixin, Model):
     username = CharField(unique=True)
