@@ -4,7 +4,6 @@ from resources.users import users_api
 from resources.posts import posts_api
 # from resources.wine import wine_api
 
-import requests
 
 from flask_cors import CORS
 from flask_login import LoginManager
@@ -45,19 +44,6 @@ def after_request(response):
 def hello():
     return 'hi'
 
-# @app.route('/winelist')
-# def get_data():
-#     requests.get('https://api.globalwinescore.com/globalwinescores/latest/?wine_id=')
-#     return 
-
-# @app.route('/wines')
-# def wines():
-#     r = requests.get('https://api.globalwinescore.com/globalwinescores/latest/?wine_id=')
-#     r.headers{
-#         'content-type': 'application/json',
-#         'Authorization':'Token 911c4473076f96f384b74008df0dff9596bc829c'
-#     }
-#     return r.json()
 
 if __name__ == '__main__':
     models.initialize()
