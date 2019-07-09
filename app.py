@@ -1,19 +1,25 @@
 import os
-from flask import Flask, g
+import json
+from flask import Flask, g, flash, request, redirect, url_for, session, make_response
 import models
+from werkzeug.utils import secure_filename
 from resources.users import users_api
 from resources.posts import posts_api
-# from resources.wine import wine_api
 
 
-from flask_cors import CORS
+
+from flask_cors import CORS, cross_origin
 from flask_login import LoginManager
 login_manager = LoginManager()
 
 import config
 
+UPLOAD_FOLDER = "./static"
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 login_manager.init_app(app)
 
 @login_manager.user_loader
@@ -25,11 +31,10 @@ def load_user(userid):
 
 CORS(users_api, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True)
 CORS(posts_api, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True)
-# CORS(wine_api, origins=["https://api.globalwinescore.com/globalwinescores/latest"], supports_credentials=True)
+CORS(app, expose_headers='Authorization')
 
 app.register_blueprint(users_api, url_prefix='/users')
 app.register_blueprint(posts_api, url_prefix='/wine')
-# app.register_blueprint(wine_api, url="https://api.globalwinescore.com/globalwinescores/latest")
 
 @app.before_request
 def before_request():
@@ -45,8 +50,24 @@ def after_request(response):
 def hello():
     return 'hi'
 
+@app.route('/upload', methods=['POST'])
+def fileUpload():
+    target=os.path.join(UPLOAD_FOLDER, 'imgs')
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    file = request.files['file']
+    filename = secure_filename(file.filename)
+    destination = '/'.join([target, filename])
+    file.save(destination)
+    session['uploadFilePath'] = destination
+    return make_response(
+    json.dumps({
+        'destination': destination,
+        'message': 'successfully saved image'
+    }), 200)
+
+
 if 'ON_HEROKU' in os.environ:
-    print('hittlin ')
     models.initialize()
 
 

@@ -1,13 +1,8 @@
 import json
-
 from flask import jsonify, Blueprint, abort, make_response
-
 from flask_restful import (Resource, Api, reqparse, inputs, fields, marshal, marshal_with, url_for)
-
 from flask_login import login_user, logout_user, login_required, current_user
-
 from flask_bcrypt import check_password_hash, generate_password_hash
-
 import models
 
 
@@ -42,7 +37,6 @@ class UserList(Resource):
     def post(self):
         args = self.reqparse.parse_args()
         if args['password'] == args['verify_password']:
-            print(args, ' this is args')
             user = models.User.create_user(**args)
             login_user(user)
             create_user = marshal(user, user_fields)
@@ -79,7 +73,6 @@ class User(Resource):
             args = self.reqparse.parse_args()
             user = models.User.get(models.User.username==args['username'])
             if(user):
-                print(user, "this is user")
                 if(check_password_hash(user.password, args['password'])):
                     return make_response(
                         json.dumps({
@@ -126,11 +119,9 @@ class SingleUser(Resource):
     @marshal_with(user_fields)
     def put(self, id):
         args = self.reqparse.parse_args()
-        print(args)
         if(args['password']==''):
             self.reqparse.remove_argument('password')
             args = self.reqparse.parse_args()
-            print(args)
         else:
             args['password'] = generate_password_hash(args['password'])
         query = models.User.update(**args).where(models.User.id==id)

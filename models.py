@@ -9,6 +9,7 @@ from flask_login import UserMixin
 from flask_bcrypt import generate_password_hash
 
 DATABASE = connect(os.environ.get('DATABASE_URL'))
+# DATABASE = SqliteDatabase('wine.sqlite')
 
 class User(UserMixin, Model):
     username = CharField(unique=True)
@@ -39,13 +40,14 @@ class Post(Model):
     user = CharField()
     img = CharField()
     wine = CharField()
-    vintage = CharField(max_length=4)
-    comment = CharField()
+    vintage = CharField()
+    comment = TextField()
     created_at = DateTimeField(default=datetime.datetime.now)
     # created_by = ForeignKeyField(User, related_name='post_set')
     
     class Meta:
         database = DATABASE
+    
  
 
 def initialize():
