@@ -59,7 +59,7 @@ def fileUpload():
     file = request.files['file']
     filename = secure_filename(file.filename)
     destination = '/'.join([target, filename])
-    # file.save(destination)
+    file.save(destination)
     # session['uploadFilePath'] = destination
     return make_response(
     json.dumps({
