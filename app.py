@@ -64,7 +64,7 @@ def fileUpload():
     return make_response(
     json.dumps({
         # 'destination': os.path.join('/' + app.config['UPLOAD_FOLDER'] + '/' + filename),
-        'mydir' : MYDIR
+        'mydir' : MYDIR,
         'message': 'successfully saved image'
     }), 200)
 
