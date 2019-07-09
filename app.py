@@ -54,9 +54,9 @@ def hello():
 @app.route('/upload', methods=['POST'])
 def fileUpload():
     target=os.path.join(MYDIR + '/' + app.config['UPLOAD_FOLDER'])
-    if not os.path.isdir(target):
-        os.mkdir(target)
-    # file = request.files['file']
+    # if not os.path.isdir(target):
+    #     os.mkdir(target)
+    file = request.files['file']
     # filename = secure_filename(file.filename)
     # destination = '/'.join([target, filename])
     # file.save(destination)
