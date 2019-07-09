@@ -32,7 +32,7 @@ def load_user(userid):
 
 CORS(users_api, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True)
 CORS(posts_api, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True)
-CORS(app, expose_headers='Authorization')
+CORS(app, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True))
 
 app.register_blueprint(users_api, url_prefix='/users')
 app.register_blueprint(posts_api, url_prefix='/wine')
@@ -63,7 +63,7 @@ def fileUpload():
     # session['uploadFilePath'] = destination
     return make_response(
     json.dumps({
-        'destination': os.path.join('/' + app.config['UPLOAD_FOLDER'] + '/' + filename),
+        # 'destination': os.path.join('/' + app.config['UPLOAD_FOLDER'] + '/' + filename),
         'message': 'successfully saved image'
     }), 200)
 
