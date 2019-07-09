@@ -53,9 +53,9 @@ def hello():
 
 @app.route('/upload', methods=['POST'])
 def fileUpload():
-    # target=os.path.join(MYDIR + '/' + app.config['UPLOAD_FOLDER'])
-    # if not os.path.isdir(target):
-    #     os.mkdir(target)
+    target=os.path.join(MYDIR + '/' + app.config['UPLOAD_FOLDER'])
+    if not os.path.isdir(target):
+        os.mkdir(target)
     # file = request.files['file']
     # filename = secure_filename(file.filename)
     # destination = '/'.join([target, filename])
@@ -64,7 +64,7 @@ def fileUpload():
     return make_response(
     json.dumps({
         # 'destination': os.path.join('/' + app.config['UPLOAD_FOLDER'] + '/' + filename),
-        'mydir' : os.path.join(MYDIR + '/' + app.config['UPLOAD_FOLDER']),
+        'target' : os.path.join(MYDIR + '/' + app.config['UPLOAD_FOLDER']),
         'message': 'successfully saved image'
     }), 200)
 
