@@ -57,8 +57,8 @@ def fileUpload():
     # if not os.path.isdir(target):
     #     os.mkdir(target)
     file = request.files['file']
-    # filename = secure_filename(file.filename)
-    # destination = '/'.join([target, filename])
+    filename = secure_filename(file.filename)
+    destination = '/'.join([target, filename])
     # file.save(destination)
     # session['uploadFilePath'] = destination
     return make_response(
