@@ -14,7 +14,8 @@ login_manager = LoginManager()
 
 import config
 
-UPLOAD_FOLDER = "./static"
+MYDIR = os.path.dirname(__file__)
+UPLOAD_FOLDER = "static/imgs"
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
@@ -52,7 +53,7 @@ def hello():
 
 @app.route('/upload', methods=['POST'])
 def fileUpload():
-    target=os.path.join(UPLOAD_FOLDER, 'imgs')
+    target=os.path.join(MYDIR + '/' + app.config['UPLOAD_FOLDER'])
     if not os.path.isdir(target):
         os.mkdir(target)
     file = request.files['file']
@@ -62,7 +63,7 @@ def fileUpload():
     session['uploadFilePath'] = destination
     return make_response(
     json.dumps({
-        'destination': destination,
+        'destination': os.path.join('/' + app.config['UPLOAD_FOLDER'] + '/' + filename),
         'message': 'successfully saved image'
     }), 200)
 

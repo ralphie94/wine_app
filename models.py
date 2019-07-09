@@ -14,7 +14,6 @@ DATABASE = connect(os.environ.get('DATABASE_URL'))
 class User(UserMixin, Model):
     username = CharField(unique=True)
     password = CharField(max_length=100)
-    # cellar = []
 
     class Meta:
         database = DATABASE
