@@ -1,19 +1,26 @@
-from flask import Flask, g
+import os
+import json
+from flask import Flask, g, flash, request, redirect, url_for, session, make_response
 import models
+from werkzeug.utils import secure_filename
 from resources.users import users_api
 from resources.posts import posts_api
-# from resources.wine import wine_api
 
-import requests
 
-from flask_cors import CORS
+
+from flask_cors import CORS, cross_origin
 from flask_login import LoginManager
 login_manager = LoginManager()
 
 import config
 
+MYDIR = os.path.dirname(__file__)
+UPLOAD_FOLDER = "static/imgs"
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 login_manager.init_app(app)
 
 @login_manager.user_loader
@@ -23,13 +30,12 @@ def load_user(userid):
     except models.DoesNotExist:
         return None
 
-CORS(users_api, origins=["http://localhost:3000"], supports_credentials=True)
-CORS(posts_api, origins=["http://localhost:3000"], supports_credentials=True)
-# CORS(wine_api, origins=["https://api.globalwinescore.com/globalwinescores/latest"], supports_credentials=True)
+CORS(users_api, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True)
+CORS(posts_api, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True)
+CORS(app, origins=["http://localhost:3000", "https://winepost.herokuapp.com"], supports_credentials=True)
 
 app.register_blueprint(users_api, url_prefix='/users')
 app.register_blueprint(posts_api, url_prefix='/wine')
-# app.register_blueprint(wine_api, url="https://api.globalwinescore.com/globalwinescores/latest")
 
 @app.before_request
 def before_request():
@@ -45,19 +51,26 @@ def after_request(response):
 def hello():
     return 'hi'
 
-# @app.route('/winelist')
-# def get_data():
-#     requests.get('https://api.globalwinescore.com/globalwinescores/latest/?wine_id=')
-#     return 
+@app.route('/upload', methods=['POST'])
+def fileUpload():
+    target=os.path.join(MYDIR + '/' + app.config['UPLOAD_FOLDER'])
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    file = request.files['file']
+    filename = secure_filename(file.filename)
+    destination = '/'.join([target, filename])
+    file.save(destination)
+    session['uploadFilePath'] = destination
+    return make_response(
+    json.dumps({
+        'destination': os.path.join('/' + app.config['UPLOAD_FOLDER'] + '/' + filename),
+        'message': 'successfully saved image'
+    }), 200)
 
-# @app.route('/wines')
-# def wines():
-#     r = requests.get('https://api.globalwinescore.com/globalwinescores/latest/?wine_id=')
-#     r.headers{
-#         'content-type': 'application/json',
-#         'Authorization':'Token 911c4473076f96f384b74008df0dff9596bc829c'
-#     }
-#     return r.json()
+
+if 'ON_HEROKU' in os.environ:
+    models.initialize()
+
 
 if __name__ == '__main__':
     models.initialize()

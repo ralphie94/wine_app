@@ -66,8 +66,8 @@ class PostList(Resource):
 
     def post(self):
         args = self.reqparse.parse_args()
-        print(args, "<---- args (req.body)")
         post = models.Post.create(**args)
+        
         return make_response(
             json.dumps({
                 'post': marshal(post, post_fields),
